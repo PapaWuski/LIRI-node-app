@@ -8,8 +8,6 @@ const keys = require("./keys.js");
 
 const spotify = new Spotify(keys.spotify);
 
-const userInput = process.argv.slice(3).join(" ");
-
 const spotifySong = userInput => {
   spotify
     .search({ type: "track", query: userInput })
@@ -22,12 +20,22 @@ const spotifySong = userInput => {
 };
 
 const movieThis = userInput => {
-    // console.log(keys.axios.omdb,userInput)
   const url = `http://www.omdbapi.com/?t=${userInput}&y=&plot=short&apikey=${keys.axios.omdb}`;
   axios.get(url).then(response => {
     console.log(response);
   }).catch(err => console.log(err));
 };
+const concertThis = userInput => {
+  
+  const url = `https://rest.bandsintown.com/artists/${userInput}?app_id=${keys.axios.bit}`;
+  axios.get(url).then(response => {
+    console.log(response);
+  }).catch(err => console.log(err));
+};
+
+// const appendToLog = str => {
+//   fs.writeFile  
+// }
 
 // response.tracks.items[0-19].{artists[0].name  name}
 inquirer
@@ -48,6 +56,17 @@ inquirer
   .then(data => {
     switch (data.response) {
       case "Concert This":
+          inquirer
+            .prompt([
+              {
+                name: "bandName",
+                type: "input",
+                message: "What is the name of the band you are looking for?"
+              }
+            ])
+            .then(data => {
+              concertThis(data.bandName);
+            });
         break;
       case "Spotify This":
         inquirer
