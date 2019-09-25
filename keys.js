@@ -6,5 +6,6 @@ exports.spotify = {
 };
 
 exports.axios = {
-	omdb: process.env.MOVIEOMDB_APIKEY
+	omdb: process.env.MOVIEOMDB_APIKEY,
+	bit: process.env.BANDSINTOWN_APIKEY
 }
