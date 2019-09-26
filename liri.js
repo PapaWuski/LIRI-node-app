@@ -13,17 +13,19 @@ const spotifySong = userInput => {
     .search({ type: "track", query: userInput })
     .then(function(response) {
       if (!response.tracks.items) {
-        console.log("No songs found!");
+        const errMsg = "No songs found!";
+        appendToLog(errMsg);
+        console.log(errMsg);
         return;
       }
-      console.log(
-        `
-Artist Name: ${response.tracks.items[0].artists[0].name}
-Track Name: ${response.tracks.items[0].name}
-Album Name: ${response.tracks.items[0].album.name}
-Link to Spotify: ${response.tracks.items[0].external_urls.spotify}
-`
-      );
+      const print = `
+  Artist Name: ${response.tracks.items[0].artists[0].name}
+  Track Name: ${response.tracks.items[0].name}
+  Album Name: ${response.tracks.items[0].album.name}
+  Link to Spotify: ${response.tracks.items[0].external_urls.spotify}
+`;
+      appendToLog(print);
+      console.log(print);
     })
     .catch(function(err) {
       console.log(err);
@@ -37,18 +39,21 @@ const movieThis = userInput => {
     .get(url)
     .then(response => {
       if (response.data.Error) {
+        appendToLog(response.data.Error);
         console.log(response.data.Error);
         return;
       }
-      console.log(`
-Title: ${response.data.Title}
-Release Year: ${response.data.Year}
-IMDB Rating: ${response.data.imdbRating}
-Produced in: ${response.data.Country}
-Avaliable in: ${response.data.Language}
-Plot Summary: ${response.data.Plot}
-Major Actors: ${response.data.Actors}
-`);
+      const print = `
+  Title: ${response.data.Title}
+  Release Year: ${response.data.Year}
+  IMDB Rating: ${response.data.imdbRating}
+  Produced in: ${response.data.Country}
+  Avaliable in: ${response.data.Language}
+  Plot Summary: ${response.data.Plot}
+  Major Actors: ${response.data.Actors}
+`;
+      appendToLog(print);
+      console.log(print);
     })
     .catch(err => console.log(err));
 };
@@ -65,17 +70,19 @@ const concertThis = userInput => {
         concertsCount = response.data.length;
       }
       if (concertsCount === 0) {
-        Console.log(`There's no concerts for ${userInput}`);
+        console.log(`There's no concerts for ${userInput}`);
+        return;
       }
+      let print = "";
       console.log(`Here are ${concertsCount} concerts for ${userInput}!`);
       for (let i = 0; i < concertsCount; i++) {
-        console.log(
-          `
-Venue: ${response.data[i].venue.name}
-Location: ${response.data[i].venue.city},${response.data[i].venue.country}
-Date: ${response.data[i].datetime}
-`
-        );
+        print = `
+  Venue: ${response.data[i].venue.name}
+  Location: ${response.data[i].venue.city},${response.data[i].venue.country}
+  Date: ${response.data[i].datetime}
+`;
+        appendToLog(print);
+        console.log(print);
       }
     })
     .catch(err => console.log(err.response.data.errorMessage));
@@ -83,10 +90,19 @@ Date: ${response.data[i].datetime}
 
 // create logging function here
 const appendToLog = str => {
-  fs.appendFile("log.txt", moment().format("L") + " " + str + "\n", err =>
-    console.log(err)
-  );
+  fs.appendFile("log.txt", moment().format("lll") + ": " + str + "\n", function(
+    err
+  ) {
+    if (err) {
+      throw err;
+    }
+  });
 };
+
+const doWhatItSays = () =>{
+  
+}
+
 
 // response.tracks.items[0-19].{artists[0].name  name}
 const program = () => {
@@ -106,6 +122,7 @@ const program = () => {
       }
     ])
     .then(data => {
+      appendToLog(data.response);
       switch (data.response) {
         case "Concert This":
           inquirer
@@ -117,6 +134,7 @@ const program = () => {
               }
             ])
             .then(data => {
+              appendToLog(data.bandName);
               concertThis(data.bandName);
             });
           break;
@@ -130,6 +148,7 @@ const program = () => {
               }
             ])
             .then(data => {
+              appendToLog(data.songName);
               spotifySong(data.songName);
             });
           break;
@@ -143,6 +162,7 @@ const program = () => {
               }
             ])
             .then(data => {
+              appendToLog(data.movieName);
               movieThis(data.movieName);
             });
           break;
@@ -157,3 +177,5 @@ const program = () => {
       }
     });
 };
+
+program();
