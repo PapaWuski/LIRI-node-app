@@ -29,7 +29,7 @@ The LIRI program uses all of the following node.js packages
 
 ### Installation
 
-To use the LIRI node app, the user must create a ".env" file with the following code.
+To use the LIRI node app, the user must create a ".env" file with the following code in the root directory of wherever this project is cloned to.
 
 ``` plainText
 # Spotify API keys
@@ -42,7 +42,7 @@ MOVIEOMDB_APIKEY = [Your OMDB API key here]
 BANDSINTOWN_APIKEY = [Your Bands in town API KEy]
 ```
 
-Please also run `npm i` or `npm install` to download all of the dependencies for LIRI to run properly.
+Please also run `npm i` or `npm install` in terminal/gitbash while in the root directory to download all of the dependencies for LIRI.
 
 ## Running the Application
 
@@ -91,3 +91,25 @@ Spotify this will return the following pieces of information:
 - The song's name
 - The album that the song is from
 - A preview link of the song from Spotify
+
+### Do What It Says
+
+![liri do what it says](./assets/liri_do_what_it_says.PNG)
+
+"Do what it says" will open the `random.txt` file and run one of the following commands based on the plaintext of the file
+
+-`Concert This <arg>`
+-`Movie This <arg>`
+-`Spotify This <arg>`
+
+An example would if the `random.txt` file had the following line
+
+```PlainText
+Spotify This Bye Bye Bye
+```
+
+Currently, Do what it says will only accept the first command in the program. 
+
+## Additional Info
+
+The LIRI app will also create a log.txt file where it will store all of the commands the user selected along with the responses from the applet. Each command also has a timestamp to help the debugging process.
