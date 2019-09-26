@@ -18,6 +18,7 @@ const spotifySong = userInput => {
         console.log(errMsg);
         return;
       }
+      console.log(`Here's the Spotify result for ${userInput}!`);
       const print = `
   Artist Name: ${response.tracks.items[0].artists[0].name}
   Track Name: ${response.tracks.items[0].name}
@@ -41,8 +42,11 @@ const movieThis = userInput => {
       if (response.data.Error) {
         appendToLog(response.data.Error);
         console.log(response.data.Error);
+        console.log("Here's another movie instead!");
+        movieThis("Mr.Nobody");
         return;
       }
+      console.log(`Here's the omdb result for ${userInput}!`);
       const print = `
   Title: ${response.data.Title}
   Release Year: ${response.data.Year}
@@ -97,35 +101,38 @@ const appendToLog = str => {
   });
 };
 
-const doWhatItSays = () =>{
-  fs.readFile("random.txt","utf8",(err,data)=>{
-    if(err){
-      return console.log(err)
+const doWhatItSays = () => {
+  fs.readFile("random.txt", "utf8", (err, data) => {
+    if (err) {
+      return console.log(err);
     }
-    appendToLog(data)
-    const parsing = data.split(" ")
-    const command = parsing.slice(0,2).join(" ").toLowerCase()
-    const search = parsing.slice(3).join(" ")
+    appendToLog(data);
+    const parsing = data.split(" ");
+    const command = parsing
+      .slice(0, 2)
+      .join(" ")
+      .toLowerCase();
+    const search = parsing.slice(3).join(" ");
     switch (command) {
       case "concert this":
-            concertThis(search);
+        concertThis(search);
         break;
       case "spotify this":
-            spotifySong(search);
+        spotifySong(search);
         break;
       case "movie this":
-            movieThis(search);
+        movieThis(search);
         break;
       default:
-        console.log("not a valid random.txt file.")
+        console.log("not a valid random.txt file.");
         break;
     }
-  })
-}
-
+  });
+};
 
 // response.tracks.items[0-19].{artists[0].name  name}
 const program = () => {
+  appendToLog("--------------------");
   inquirer
     .prompt([
       {
