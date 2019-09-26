@@ -79,7 +79,7 @@ const concertThis = userInput => {
         print = `
   Venue: ${response.data[i].venue.name}
   Location: ${response.data[i].venue.city},${response.data[i].venue.country}
-  Date: ${response.data[i].datetime}
+  Date: ${moment.parseZone(response.data[i].datetime).format("MM/DD/YYYY")}
 `;
         appendToLog(print);
         console.log(print);
@@ -90,17 +90,37 @@ const concertThis = userInput => {
 
 // create logging function here
 const appendToLog = str => {
-  fs.appendFile("log.txt", moment().format("lll") + ": " + str + "\n", function(
-    err
-  ) {
+  fs.appendFile("log.txt", moment().format("lll") + ": " + str + "\n", err => {
     if (err) {
-      throw err;
+      appendToLog(err);
     }
   });
 };
 
 const doWhatItSays = () =>{
-  
+  fs.readFile("random.txt","utf8",(err,data)=>{
+    if(err){
+      return console.log(err)
+    }
+    appendToLog(data)
+    const parsing = data.split(" ")
+    const command = parsing.slice(0,2).join(" ").toLowerCase()
+    const search = parsing.slice(3).join(" ")
+    switch (command) {
+      case "concert this":
+            concertThis(search);
+        break;
+      case "spotify this":
+            spotifySong(search);
+        break;
+      case "movie this":
+            movieThis(search);
+        break;
+      default:
+        console.log("not a valid random.txt file.")
+        break;
+    }
+  })
 }
 
 
@@ -167,6 +187,7 @@ const program = () => {
             });
           break;
         case "Do what it says":
+          doWhatItSays();
           break;
         case "Quit":
           console.log("Okay Goodbye!");
